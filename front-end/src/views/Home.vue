@@ -1,18 +1,46 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="card">
+      <GameInfo />
+    </div>
+    <div class="card">
+      <HowToPlay />
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import GameInfo from '../components/GameInfo';
+import HowToPlay from '../components/HowToPlay';
 
 export default {
   name: 'home',
   components: {
-    HelloWorld
+    GameInfo,
+    HowToPlay
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .home {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+
+    .card {
+      display: flex;
+      flex-flow: row nowrap;
+      width: 100%;
+    }
+  }
+
+  @media screen and (max-width: 800px) {
+    .home {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-gap: 0px;
+    }
+  }
+</style>
+

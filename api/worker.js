@@ -18,25 +18,29 @@ exports.latestBlockHeight = 0;
 
 exports.currentGame = {};
 
-exports.newGame = function(start) {
-  let wallet = MinterWallet.generateWallet();
-  let privateKey = wallet.getPrivateKeyString();
-  let seed = wallet.getMnemonic();
-  let address = wallet.getAddressString();
+exports.newGame = function(start, fromFile) {
+  if (fromFile === undefined) {
+    let wallet = MinterWallet.generateWallet();
+    let privateKey = wallet.getPrivateKeyString();
+    let seed = wallet.getMnemonic();
+    let address = wallet.getAddressString();
 
-  this.currentGame = {
-    start: start,
-    end: start + config.gameLength,
-    ticketPrice: config.ticketPrice,
-    ticketTicker: config.coin,
-    seed: seed,
-    privateKey: privateKey,
-    address: address,
-    transactions: [],
-    tickets: [],
-    returned: [],
-    winners: []
-  };
+    this.currentGame = {
+      start: start,
+      end: start + config.gameLength,
+      ticketPrice: config.ticketPrice,
+      ticketTicker: config.coin,
+      seed: seed,
+      privateKey: privateKey,
+      address: address,
+      transactions: [],
+      tickets: [],
+      returned: [],
+      winners: []
+    };
+  } else {
+    this.currentGame = fromFile;
+  }
 
   adminBot.sendMessage(
     config.adminBotChatId,
@@ -251,6 +255,28 @@ exports.newTransaction = function(transaction) {
 
 exports.run = function() {
   // Get latest block
+  let getBlockHeight = utils.getBlocksHeight();
+  getBlockHeight.then((result, err) => {
+    this.latestBlockHeight = result.body.data.latestBlockHeight;
+
+    let rawdata = fs.readFileSync("game.json");
+    if (fs.existsSync("game.json")) {
+      let game = JSON.parse(rawdata);
+      if (
+        game.start < this.latestBlockHeight &&
+        game.end > this.latestBlockHeight
+      ) {
+        this.currentGame = game;
+      } else {
+        this.newGame(this.latestBlockHeight);
+        console.log(this.currentGame);
+      }
+    } else {
+      this.newGame(this.latestBlockHeight);
+      console.log(this.currentGame);
+    }
+  });
+
   setInterval(() => {
     let getBlockHeight = utils.getBlocksHeight();
     getBlockHeight.then((result, err) => {
@@ -258,12 +284,6 @@ exports.run = function() {
     });
     console.log("Block Height: " + this.latestBlockHeight);
   }, 5200);
-
-  // Start new Game
-  setTimeout(() => {
-    this.newGame(this.latestBlockHeight);
-    console.log(this.currentGame);
-  }, 7000);
 
   // Update transactions =>
   setInterval(() => {

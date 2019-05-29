@@ -1,11 +1,19 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+  <v-app id="app">
+    <v-toolbar 
+      color="primary"
+      dark
+    >
+    <v-toolbar-title>Minter Lottery</v-toolbar-title>
+    <v-spacer></v-spacer>
+    <v-toolbar-items class="hidden-sm-and-down">
+      <v-btn flat href="https://tele.click/minterw" target="_blank">Telegram</v-btn>
+    </v-toolbar-items>
+  </v-toolbar>
+  <div class="app-container">
+    <router-view />
   </div>
+  </v-app>
 </template>
 
 <style lang="scss">
@@ -25,5 +33,10 @@
       color: #42b983;
     }
   }
+}
+.app-container {
+  display: flex;
+  flex-flow: column wrap;
+  margin: 20px;
 }
 </style>

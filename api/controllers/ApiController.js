@@ -43,8 +43,12 @@ router.get("/winners", (req, res) => {
 });
 
 router.get("/status", (req, res) => {
+  let testnet;
+  if (config.chainId === 2) testnet = true;
+  else testnet = false;
   let send = {
     currentBlock: worker.latestBlockHeight,
+    testnet: testnet,
     start: worker.currentGame.start,
     end: worker.currentGame.end,
     ticketPrice: config.ticketPrice,
