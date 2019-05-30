@@ -22,34 +22,10 @@
 
 <script>
 import axios from 'axios';
-import VueQrcode from '@chenfengyuan/vue-qrcode';
 
 export default {
   name: "GameInfo",
-  components: [
-  ],
-  data() {
-    return {
-      isLoading: true,
-      info: {},
-    }
-  },
-  methods: {
-    getInfo: function () {
-      axios.get('http://localhost:3002/api/status')
-      .then((res) => {
-        console.log(res.data);
-        this.isLoading = false,
-        this.info = res.data;
-      })
-    }
-  },
-  created() {
-    this.getInfo();
-    setInterval(() => {
-      this.getInfo();
-    }, 5000);
-  },
+  props: ['info'],
   computed: {
     status: function () {
       if (this.info.currentBlock >= this.info.start && this.info.currentBlock < this.info.end) {
