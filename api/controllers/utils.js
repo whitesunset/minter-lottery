@@ -1,16 +1,17 @@
 const superagent = require("superagent");
 const config = require("../config");
 
-exports.addressInfo = function(address) {
-  return superagent.get(config.nodeURL + "/address?address=" + address);
+exports.getTransactions = async function(address) {
+  const responce = await superagent
+    .get(config.explorerURL + "/addresses/" + address + "/transactions")
+    .retry(3);
+
+  return responce.body.data;
 };
 
-exports.getTransactions = function(address) {
-  return superagent.get(
-    config.explorerURL + "/addresses/" + address + "/transactions"
-  );
-};
-
-exports.getBlocksHeight = function() {
-  return superagent.get(config.explorerURL + "/status");
+exports.getBlocksHeight = async function() {
+  const responce = await superagent
+    .get(config.explorerURL + "/status")
+    .retry(3);
+  return responce.body.data.latestBlockHeight;
 };

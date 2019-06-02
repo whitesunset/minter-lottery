@@ -17,6 +17,8 @@
     "express": "^4.17.1",
     "minter-js-sdk": "^0.16.0",
     "minterjs-wallet": "^3.0.2",
+    "mongodb": "^3.2.6",
+    "mongoose": "^5.5.12",
     "nanoid": "^2.0.3",
     "node-telegram-bot-api": "^0.30.0",
     "nodemon": "^1.19.1",
