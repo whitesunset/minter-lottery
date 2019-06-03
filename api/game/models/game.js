@@ -12,6 +12,7 @@ const GameSchema = new mongoose.Schema({
   coin: String,
   chainId: Number,
   transactions: Array,
+  ticketsNumber: Number,
   tickets: Array,
   returned: Array,
   winners: Array,

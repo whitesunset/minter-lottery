@@ -2,7 +2,7 @@ import axios from "axios";
 
 let baseUrl;
 if (process.env.NODE_ENV === "production") {
-  baseUrl = "http://82.202.221.10:3002/api/";
+  baseUrl = "http://5.188.41.218:3002/api/";
 } else {
   baseUrl = "http://localhost:3002/api/";
 }

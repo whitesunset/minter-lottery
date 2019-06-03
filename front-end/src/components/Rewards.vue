@@ -5,11 +5,12 @@
         <span class="headline">Награды</span>
       </v-layout>
       <v-layout column wrap align-start mt-2>
+        <p>Куплено билетов: <strong>{{ticketsNumber}}</strong></p>
         <p>Текущий банк: <strong>{{bank}}</strong> {{info.ticketTicker}}</p>
-        <p>Куплено билетов: <strong>{{ticketsNumber}}</strong> {{info.ticketTicker}}</p>
         <p>За 1 место: <strong>{{first}}</strong> {{info.ticketTicker}}</p>
         <p>За 2 место: <strong>{{second}}</strong> {{info.ticketTicker}}</p>
         <p>За 3 место: <strong>{{third}}</strong> {{info.ticketTicker}}</p>
+        <p>4-18 места: <strong>{{others}}</strong> {{info.ticketTicker}}</p>
       </v-layout>
     </v-flex>
   </v-card>
@@ -25,13 +26,16 @@ export default {
       return this.info.ticketPrice * this.ticketsNumber
     },
     first: function () {
-      return Math.round(this.bank * 0.4, 2)
+      return Math.round(this.bank * 0.35, 2)
     },
     second: function () {
-      return Math.round(this.bank * 0.33, 2)
+      return Math.round(this.bank * 0.25, 2)
     },
     third: function () {
-      return Math.round(this.bank * 0.24, 2)
+      return Math.round(this.bank * 0.20, 2)
+    },
+    others: function () {
+      return Math.round(this.bank * 0.01 * 100) / 100;
     },
     returned: function () {
       return this.info.returned

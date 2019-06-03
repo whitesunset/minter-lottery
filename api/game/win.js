@@ -17,7 +17,11 @@ const win = async function(gameId) {
     return rand;
   };
 
-  if (currentGame.tickets.length === 0) return;
+  if (currentGame.tickets.length === 0) {
+    currentGame.status = "completed";
+    await game.findByIdAndUpdate(gameId, currentGame);
+    return;
+  }
 
   let tickets = [];
 
@@ -95,11 +99,6 @@ const win = async function(gameId) {
     .then(txHash => {
       console.log(`Prize Tx: ${txHash}`);
       currentGame.winTx = txHash;
-
-      // adminBot.sendMessage(
-      //   config.adminBotChatId,
-      //   JSON.stringify(this.currentGame, null, 2)
-      // );
     })
     .catch(error => {
       const errorMessage = error.response.data.error.log;
@@ -108,6 +107,7 @@ const win = async function(gameId) {
 
   currentGame.status = "completed";
   await game.findByIdAndUpdate(gameId, currentGame);
+  return;
 };
 
 module.exports = win;

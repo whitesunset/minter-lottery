@@ -24,7 +24,9 @@
         >
         <v-progress-linear v-slot:progress color="blue" indeterminate></v-progress-linear>
         <template v-slot:items="props">
-          <td class="text-xs-left">{{ props.item.owner }}</td>
+          <td class="text-xs-left">
+            <a :href="`${explorerURL}/address/${props.item.address}`" target="_blank">{{ props.item.address.substring(0,8) + '...' + props.item.address.slice(-6)}}</a>
+          </td>
           <td class="text-xs-left">{{ props.item.tickets }}</td>
         </template>
       </v-data-table>
@@ -37,7 +39,7 @@
 
 export default {
   name: "Tickets",
-  props: ['isLoading', 'tickets'],
+  props: ['isLoading', 'tickets', 'explorerURL'],
   data() {
     return {
       headers: [

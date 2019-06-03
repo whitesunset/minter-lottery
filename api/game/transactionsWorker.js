@@ -53,10 +53,14 @@ const transactionsWorker = async function(_gameId) {
             )
           };
           currentGame.tickets.push(ticket);
+          currentGame.ticketsNumber += ticket.tickets;
         }
 
         if (index > -1) {
           currentGame.tickets[index].tickets += Math.floor(
+            transaction.data.value / currentGame.ticketPrice
+          );
+          currentGame.ticketsNumber += Math.floor(
             transaction.data.value / currentGame.ticketPrice
           );
         }

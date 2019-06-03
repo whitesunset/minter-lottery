@@ -4,6 +4,9 @@ const utils = require("../controllers/utils");
 const { generateWallet } = require("minterjs-wallet");
 const config = require("../config");
 
+const TelegramBot = require("node-telegram-bot-api");
+const adminBot = new TelegramBot(config.adminBotToken, { polling: false });
+
 const init = async function() {
   let currentBlock = await utils.getBlocksHeight();
   let resultGame;
@@ -43,6 +46,7 @@ const createNewGame = async function(currentBlock) {
     ticketPrice: config.ticketPrice,
     coin: config.coin,
     chainId: config.chainId,
+    ticketsNumber: 0,
     transactions: [],
     tickets: [],
     returned: [],
@@ -55,6 +59,7 @@ const createNewGame = async function(currentBlock) {
     { currentGameId: newGame._id, gameNumber: newGame.gameNumber }
   );
 
+  adminBot.sendMessage(config.adminBotChatId, JSON.stringify(newGame, null, 2));
   return newGame;
 };
 

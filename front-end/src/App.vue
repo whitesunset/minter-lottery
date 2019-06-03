@@ -1,8 +1,7 @@
 <template>
   <v-app id="app">
     <v-toolbar 
-      color="primary"
-      dark
+      class="header-toolbar"
     >
     <v-toolbar-title>Minter Lottery</v-toolbar-title>
     <v-spacer></v-spacer>
@@ -22,18 +21,38 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #ffffff;
 }
 #nav {
   padding: 30px;
   a {
     font-weight: bold;
-    color: #2c3e50;
+    color: #fff !important;
     &.router-link-exact-active {
       color: #42b983;
     }
   }
 }
+.header-toolbar {
+  background: #b4583f !important;
+
+  a {
+    color: #fff !important;
+  }
+}
+
+.v-toolbar__title {
+  color:#fff !important;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+a {
+    color: #b4583f !important;
+}
+
 .app-container {
   display: flex;
   flex-flow: column wrap;

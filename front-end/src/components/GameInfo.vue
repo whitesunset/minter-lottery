@@ -1,11 +1,11 @@
 <template>
   <v-card class="status-card">
     <v-flex xs12>
-      <v-layout column wrap align-start>
-        <span v-if="status" class="headline status_true">Игра идет!</span>
+      <v-layout column wrap>
+        <span v-if="status" class="headline status_true">Игра #{{info.gameNumber}} идет!</span>
         <span v-if="!status" class="headline status_false">Игра закончилась!</span>
-        <span v-if="status && info.testnet === false" class="status_true">Mainnet</span>
-        <span v-if="status && info.testnet === true" class="status_false">Testnet</span>
+        <span v-if="status && info.testnet === false" class="status_true">Mainnet (Block: {{info.currentBlock.toLocaleString()}})</span>
+        <span v-if="status && info.testnet === true" class="status_false">Testnet (Block: {{info.currentBlock.toLocaleString()}})</span>
         <v-progress-linear v-model="gameProgress"></v-progress-linear>
       </v-layout>
       <v-layout column wrap align-start pt-2>
@@ -13,7 +13,9 @@
       </v-layout>
       <v-layout v-if="status" column wrap align-start>
         <p><strong>Цена билета:</strong> {{info.ticketPrice}} {{info.ticketTicker}}</p>
-        <p><strong>Адрес:</strong> {{info.address}}</p>
+        <p><strong>Адрес: </strong><span class="address">{{info.address}}</span></p>
+      </v-layout>
+      <v-layout v-if="status" column wrap align-center>
         <qrcode :value="info.address" :options="{ width: 200 }"></qrcode>
       </v-layout>
     </v-flex>
@@ -21,8 +23,6 @@
 </template>
 
 <script>
-import axios from 'axios';
-
 export default {
   name: "GameInfo",
   props: ['info'],
