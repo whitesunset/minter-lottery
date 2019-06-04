@@ -31,7 +31,7 @@ const createNewGame = async function(currentBlock) {
   const wallet = generateWallet();
   let gameSettings = await settings.findOne({ name: "settings" });
   if (gameSettings === null) {
-    await settings.create({ name: "settings", gameNumber: 1 });
+    await settings.create({ name: "settings", gameNumber: 0 });
   }
   gameSettings = await settings.findOne({ name: "settings" });
 

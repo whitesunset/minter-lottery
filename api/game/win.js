@@ -84,7 +84,7 @@ const win = async function(gameId) {
     chainId: currentGame.chainId,
     feeCoinSymbol: currentGame.coin,
     gasPrice: 1,
-    message: `You won the Lottery!`,
+    message: `You won the Lottery! Game #${currentGame.gameNumber}`,
     list: currentGame.winners.map(item => {
       return {
         value: item.prize,
