@@ -6,6 +6,7 @@
     <v-toolbar-title>Minter Lottery</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-sm-and-down">
+      <v-btn flat href="https://minter.work" target="_blank">Сайт</v-btn>
       <v-btn flat href="https://tele.click/minterw" target="_blank">Telegram</v-btn>
     </v-toolbar-items>
   </v-toolbar>

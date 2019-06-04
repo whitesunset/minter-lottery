@@ -51,5 +51,8 @@ export default {
   .status_false {
     color: rgb(241, 0, 0);
   }
+  .address {
+    word-break: break-all;
+  }
 </style>
 
