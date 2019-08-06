@@ -1,20 +1,38 @@
 <template>
-  <v-app id="app">
+  <v-app id="app" :dark="goDark">
     <v-toolbar 
       class="header-toolbar"
     >
     <v-toolbar-title>Minter Lottery</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-sm-and-down">
-      <v-btn flat href="https://minter.work" target="_blank">Сайт</v-btn>
-      <v-btn flat href="https://tele.click/minterw" target="_blank">Telegram</v-btn>
+      <!-- <v-btn flat href="https://minter.work" target="_blank">Сайт</v-btn> -->
+      <v-btn flat href="https://tele.click/minter_lottery" target="_blank">Telegram</v-btn>
+      <!-- <v-switch style="margin-top: 15px"
+        v-model="goDark"
+      ></v-switch> -->
     </v-toolbar-items>
   </v-toolbar>
   <div class="app-container">
-    <router-view />
+    <Home class="app-content" />
   </div>
   </v-app>
 </template>
+
+<script>
+import Home from './views/Home';
+
+export default {
+  name: 'App',
+  components: { Home },
+  data() {
+    return {
+      goDark: false
+    }
+  },
+}
+</script>
+
 
 <style lang="scss">
 #app {
@@ -35,7 +53,7 @@
   }
 }
 .header-toolbar {
-  background: #b4583f !important;
+  background: rgb(230, 72, 28) !important;
 
   a {
     color: #fff !important;
@@ -51,12 +69,31 @@
 }
 
 a {
-    color: #b4583f !important;
+    color: #FC4F1E !important;
 }
 
 .app-container {
   display: flex;
   flex-flow: column wrap;
   margin: 20px;
+}
+
+.v-input {
+  label {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif !important;
+    -webkit-font-smoothing: antialiased !important;
+    color: #fff !important;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .app-container {
+    display: grid;
+    grid-template-columns: auto 1280px auto;
+  }
+
+  .app-content {
+    grid-column: 2 / 3;
+  }
 }
 </style>

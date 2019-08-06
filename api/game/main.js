@@ -1,13 +1,28 @@
 const utils = require("../controllers/utils");
 const game = require("./models/game");
+const config = require('../config');
 
 const init = require("./init");
 const transactionsWorker = require("./transactionsWorker");
 const win = require("./win");
 
+const Agent = require('socks5-https-client/lib/Agent');
+const TelegramBot = require("node-telegram-bot-api");
+exports.Bot = new TelegramBot(config.botToken, {
+  polling: true, request: {
+    agentClass: Agent,
+    agentOptions: {
+      socksHost: config.socksHost,
+      socksPort: config.socksPort,
+      socksUsername: config.socksUsername,
+      socksPassword: config.socksPassword
+    }
+  }
+});
+
 exports.latestBlockHeight = 0;
 
-exports.run = async function() {
+exports.run = async function () {
   this.latestBlockHeight = await utils.getBlocksHeight();
   let gameId = await init();
   transactionsWorker(gameId);

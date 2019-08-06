@@ -5,13 +5,13 @@
         <GameInfo :info="info" />
       </div>
       <div class="card">
-        <HowToPlay />
+        <HowToPlay :ticketTicker="info.ticketTicker" />
       </div>
       <div v-if="status" class="card">
         <Tickets :tickets="info.tickets" :isLoading="ticketsIsLoading" :explorerURL="explorerURL" />
       </div>
       <div v-if="status" class="card">
-        <Rewards :ticketsNumber="info.ticketsNumber" :isLoading="ticketsIsLoading" :info="info" />
+        <Rewards :ticketsNumber="info.ticketsNumber" :isLoading="ticketsIsLoading" :info="info" :coinPrice="coinPrice" />
       </div>
     </div>
     <div class="completed-games hidden-sm-and-down" >
@@ -28,9 +28,12 @@ import Rewards from '../components/Rewards';
 import History from '../components/History';
 
 import { HTTP } from '../http';
+import { Minter, SendTxParams } from "minter-js-sdk";
+
+const minterSDK = new Minter({apiType: 'node', baseURL: 'https://api.minter.one'});
 
 export default {
-  name: 'home',
+  name: 'Home',
   components: {
     GameInfo,
     HowToPlay,
@@ -43,7 +46,8 @@ export default {
       info: {},
       history: [],
       ticketsIsLoading: true,
-      ticketsNumber: 0
+      ticketsNumber: 0,
+      coinPrice: 0
     }
   },
   methods: {
@@ -56,6 +60,11 @@ export default {
         setTimeout(() => {
           this.ticketsIsLoading = false;
         }, 1000);
+      }).catch(() => {
+        this.info = {
+          currentBlock: 2,
+          end: 1
+        }
       })
     },
     getHistory: function () {
@@ -74,6 +83,19 @@ export default {
     setInterval(() => {
       this.getHistory();
     }, 20000);
+
+    setTimeout(() => {
+      if (this.info.ticketTicker === 'BIP') this.coinPrice = 1;
+      else {
+        minterSDK.estimateCoinSell({
+          coinToSell: this.info.ticketTicker,
+          valueToSell: '1',
+          coinToBuy: 'BIP',
+        }).then((result) => {
+            this.coinPrice = result.will_get;
+        })
+      }
+    }, 2000);
   },
   computed: {
     status: function () {
@@ -83,7 +105,7 @@ export default {
     },
     explorerURL: function () {
       if (this.info.testnet === true) return 'https://testnet.explorer.minter.network';
-      else return 'https://explorer.minter.network'
+      else return 'https://minterscan.net'
     }
   },
 }

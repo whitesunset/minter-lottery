@@ -2,7 +2,7 @@ const game = require("./models/game");
 const utils = require("../controllers/utils");
 const config = require("../config");
 
-const transactionsWorker = async function(_gameId) {
+const transactionsWorker = async function (_gameId) {
   let currentGame = await game.findById(_gameId);
   let transactions = await utils.getTransactions(currentGame.address);
 
@@ -24,13 +24,13 @@ const transactionsWorker = async function(_gameId) {
       currentGame.transactions.push(transaction.hash);
 
       // Return transactions
-      if (
-        transaction.data.coin !== currentGame.coin ||
-        transaction.data.value < currentGame.ticketPrice
-      ) {
-        returnTransaction(transaction);
-        currentGame.returned.push(transaction.hash);
-      }
+      // if (
+      //   transaction.data.coin !== currentGame.coin ||
+      //   transaction.data.value < currentGame.ticketPrice
+      // ) {
+      //   returnTransaction(transaction);
+      //   currentGame.returned.push(transaction.hash);
+      // }
 
       // New tickets
       if (
@@ -77,38 +77,38 @@ const transactionsWorker = async function(_gameId) {
   // Save to DB
   await game.findByIdAndUpdate(_gameId, currentGame);
 
-  function returnTransaction(transaction) {
-    const MinterSDK = require("minter-js-sdk");
-    const minter = new MinterSDK.Minter({
-      apiType: "node",
-      baseURL: config.nodeURL
-    });
+  // function returnTransaction(transaction) {
+  //   const MinterSDK = require("minter-js-sdk");
+  //   const minter = new MinterSDK.Minter({
+  //     apiType: "node",
+  //     baseURL: config.nodeURL
+  //   });
 
-    const txParams = new MinterSDK.SendTxParams({
-      privateKey: currentGame.privateKey,
-      chainId: config.chainId,
-      address: transaction.from,
-      amount: transaction.data.value - 1,
-      coinSymbol: transaction.data.coin,
-      feeCoinSymbol: transaction.data.coin,
-      gasPrice: 1,
-      message: `Reject. We accept only ${
-        currentGame.coin
-      } coin. Minimal ticket price is ${currentGame.ticketPrice} ${
-        currentGame.coin
-      }`
-    });
+  //   const txParams = new MinterSDK.SendTxParams({
+  //     privateKey: currentGame.privateKey,
+  //     chainId: config.chainId,
+  //     address: transaction.from,
+  //     amount: transaction.data.value - 1,
+  //     coinSymbol: transaction.data.coin,
+  //     feeCoinSymbol: transaction.data.coin,
+  //     gasPrice: 1,
+  //     message: `Reject. We accept only ${
+  //       currentGame.coin
+  //     } coin. Minimal ticket price is ${currentGame.ticketPrice} ${
+  //       currentGame.coin
+  //     }`
+  //   });
 
-    minter
-      .postTx(txParams)
-      .then(txHash => {
-        console.log(`Rejected SUCCESS: ${txHash}`);
-      })
-      .catch(error => {
-        const errorMessage = error.response.data.error.log;
-        console.log(`Reject ERROR: ${errorMessage}`);
-      });
-  }
+  //   minter
+  //     .postTx(txParams)
+  //     .then(txHash => {
+  //       console.log(`Rejected SUCCESS: ${txHash}`);
+  //     })
+  //     .catch(error => {
+  //       const errorMessage = error.response.data.error.log;
+  //       console.log(`Reject ERROR: ${errorMessage}`);
+  //     });
+  // }
 };
 
 module.exports = transactionsWorker;

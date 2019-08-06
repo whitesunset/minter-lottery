@@ -18,7 +18,7 @@
             <a :href="`${explorerURL}/address/${props.item.address}`" target="_blank">{{ props.item.address.substr(0,12) + '...' + props.item.address.slice(-8)}}</a>
           </td>
           <td class="text-xs-left">
-            <a :href="`${explorerURL}/transactions/${props.item.winTx}`" 
+            <a :href="`${explorerURL}/tx/${props.item.winTx}`" 
                 target="_blank"
                 v-if="props.item.winTx.length > 0"
               >

@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 const bodyParser = require("body-parser");
 const gameDB = require("../game/models/game");
-const settingsDB = require("../game/models/settings");
 const gameWorker = require("../game/main");
+const fs = require('fs');
 
 router.use(
   bodyParser.urlencoded({
@@ -14,7 +14,8 @@ router.use(
 router.use(bodyParser.json());
 
 router.get("/status", async (req, res) => {
-  let settings = await settingsDB.findOne({ name: "settings" });
+  // ! JSON
+  let settings = JSON.parse(fs.readFileSync('game.json'))
   let result = await gameDB.findById(settings.currentGameId);
 
   let testnet;

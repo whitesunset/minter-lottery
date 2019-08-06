@@ -1,13 +1,11 @@
 const game = require("./models/game");
-const settings = require("./models/settings");
 const utils = require("../controllers/utils");
 const { generateWallet } = require("minterjs-wallet");
 const config = require("../config");
 
-const TelegramBot = require("node-telegram-bot-api");
-const adminBot = new TelegramBot(config.adminBotToken, { polling: false });
+const fs = require('fs');
 
-const init = async function() {
+const init = async function () {
   let currentBlock = await utils.getBlocksHeight();
   let resultGame;
 
@@ -27,13 +25,24 @@ const init = async function() {
   return resultGame._id;
 };
 
-const createNewGame = async function(currentBlock) {
+const createNewGame = async function (currentBlock) {
   const wallet = generateWallet();
-  let gameSettings = await settings.findOne({ name: "settings" });
-  if (gameSettings === null) {
-    await settings.create({ name: "settings", gameNumber: 0 });
+
+  let gameSettings;
+
+  try {
+    if (fs.existsSync('game.json')) {
+      let content = fs.readFileSync('game.json');
+      gameSettings = JSON.parse(content);
+      console.log(gameSettings);
+
+    }
+  } catch (err) {
+    fs.writeFileSync('game.json', JSON.stringify({ gameNumber: 0 }));
+    gameSettings = { gameNumber: 0 };
   }
-  gameSettings = await settings.findOne({ name: "settings" });
+
+  console.log('***');
 
   const newGame = await game.create({
     status: "active",
@@ -54,12 +63,24 @@ const createNewGame = async function(currentBlock) {
     winTx: ""
   });
 
-  await settings.findOneAndUpdate(
-    { name: "settings" },
-    { currentGameId: newGame._id, gameNumber: newGame.gameNumber }
-  );
+  fs.writeFileSync('game.json', JSON.stringify({ currentGameId: newGame._id, gameNumber: newGame.gameNumber }))
 
-  adminBot.sendMessage(config.adminBotChatId, JSON.stringify(newGame, null, 2));
+  const { Bot } = require('./main');
+
+  let message = `<strong>Началась игра #${newGame.gameNumber}!</strong>\n\nЦена 1 билета: <strong>${newGame.ticketPrice} ${newGame.coin}</strong>\nБольше информации: http://win.minter.work\n\nАдрес для покупки билетов в сообщении ниже.`;
+
+  Bot.sendMessage(config.botChatId, message, {
+    parse_mode: "HTML",
+    disable_web_page_preview: true
+  }).then(() => {
+
+    // Send game wallet
+    Bot.sendMessage(config.botChatId, newGame.address, {
+      parse_mode: "HTML",
+      disable_web_page_preview: true
+    })
+  })
+
   return newGame;
 };
 
